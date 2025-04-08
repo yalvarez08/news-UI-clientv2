@@ -1,5 +1,5 @@
 # CMSC 495 Capstone AI News Aggregator
-Front end side created with vite and reactJS.
+Front end side created with vite and reactJS. Axios used to make HTTP requests.
 
 ## Setup
 
