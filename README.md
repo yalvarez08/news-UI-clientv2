@@ -17,4 +17,4 @@ Vite will build program - open `http://localhost:5173/` in browser.
 
 ## snippet of what its current layout
   
-<img width="1096" alt="Screenshot 2025-04-08 at 1 35 29 AM" src="https://github.com/user-attachments/assets/5467a4bc-1228-4a96-a66a-1707f492a1be" }/>
+<img width="1096" alt="Screenshot 2025-04-08 at 1 35 29 AM" src="https://github.com/user-attachments/assets/5467a4bc-1228-4a96-a66a-1707f492a1be"/>
