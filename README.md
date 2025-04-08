@@ -15,6 +15,7 @@ Vite will build program - open `http://localhost:5173/` in browser.
 
 ### GNews is currently being used as API endpoint; will be switched to OpenAPI. 
 
-## snippet of what its current layout
+## snippet of its current layout
   
-<!-- <img width="1096" alt="Screenshot 2025-04-08 at 1 35 29 AM" src="https://github.com/user-attachments/assets/5467a4bc-1228-4a96-a66a-1707f492a1be"/> -->
+<img width="1023" alt="homescreenImg" src="https://github.com/user-attachments/assets/1e29f4fa-6a3c-4917-8f28-e9fbd8d3701f" />
+
