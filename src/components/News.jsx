@@ -1,38 +1,41 @@
 import React, { useEffect, useState } from 'react'
-import newsImage from '../assets/images/newsImage.jpg'
 import ArticleModal from './ArticleModal'
 import './News.css'
 import axios from 'axios'
 
-const categories = ['science', 'entertainment', 'sports', 'business', 'health']
+const categories = ['Science', 'Technology', 'Sports', 'Business', 'Health']
 
+// function for the news homepage
 const News = () => {
 
     const [headline, setHeadline] = useState(null)
     const [news, setNews] = useState([])
-    const [categoryOpt, setCategoryOpt] = useState('general')
+    const [categoryOpt, setCategoryOpt] = useState('Science')
     const [showModal, setShowModal] = useState(false)
     const [selectedArticle, setSelectedArticle] = useState(null)
+    const apiKey = import.meta.env.VITE_API_KEY
 
     // fetch data to render updated news data
     useEffect(() => {
         const fetchNews = async () => {
-            const url = `https://gnews.io/api/v4/top-headlines?category=${categoryOpt}&lang=en&apikey=ded415d5fa27479bb6e1fda4ba11af77`
-            // wait for response from server to proceed with get request
-            const response = await axios.get(url)
+            try {
+                const url = `https://eventregistry.org/api/v1/article/getArticles?apiKey=${apiKey}&categoryUri=news/${categoryOpt}&lang=eng`
+                // wait for response from server to proceed with get request
+                const response = await axios.get(url)
 
-            const fetchedNews = response.data.articles
+                const fetchedNews = response.data.articles?.results || []
 
-            fetchedNews.forEach((article) => {
-                if (!article.image) {
-                    article.image = 'image not available' // display if article has no image
-                }
-            })
-
-            setHeadline(fetchedNews[0])
-            setNews(fetchedNews.slice(1, 7))
-
-            console.log(news)
+                fetchedNews.forEach((article) => {
+                    if (!article.image) {
+                        article.image = 'image not available' // display if article has no image
+                    }
+                })
+                setHeadline(fetchedNews[0])
+                setNews(fetchedNews.slice(1, 7))
+                console.log(fetchedNews)
+            } catch (error) {
+                console.error('Error fetching news:', error)
+            }
         }
 
         fetchNews()
@@ -72,7 +75,7 @@ const News = () => {
                 <div className='news-section'>
                     {headline && (
                         <div className='headline'
-                        onClick={() => handleSelectedArticle(headline)}>
+                            onClick={() => handleSelectedArticle(headline)}>
                             <img src={headline.image} alt={headline.title} />
                             <h2 className='headline-title'>
                                 {headline.title}
@@ -92,7 +95,7 @@ const News = () => {
                     </div>
                 </div>
                 <ArticleModal show={showModal} article={selectedArticle}
-                onClose={() => setShowModal(false)}/>
+                    onClose={() => setShowModal(false)} />
             </div>
             <footer>
                 <p className='foot-cpyrt'>

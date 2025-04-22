@@ -1,6 +1,7 @@
 import React from 'react'
 import './ArticleModal.css'
 
+// function for modal view when user selects article
 const ArticleModal = ({ show, article, onClose }) => {
     if (!show) { // if show is false, render nothing
         return null
@@ -16,14 +17,15 @@ const ArticleModal = ({ show, article, onClose }) => {
                     <>
                         <img src={article.image} alt={article.title} className='modal-img' />
                         <h2 className='modal-title'>{article.title}</h2>
-                        <p className='modal-source'>Source: {article.source.name}</p>
-                        <p className='modal-date'>{new Date(article.publishedAt).toLocaleString(
+                        <p className='modal-source'>Source: {article.source.title}</p>
+                        <p className='modal-date'>{new Date(article.dateTime).toLocaleString(
                             'en-US', {
                             month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                        }
-                        )}</p>
+                            }   
+                        )}
+                        </p>
                         <p className='modal-articleText'>
-                            {article.content}
+                        {article.body.length > 350 ? `${article.body.slice(0, 350)}...` : article.body}
                         </p>
                         <a href={article.url} target='_blank'
                             rel='noopener noreferrer' className='continue-read'>
