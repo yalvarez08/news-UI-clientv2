@@ -30,13 +30,24 @@ const mockResponse = {
     },
 }
 
-test('renders News component and displays headline', async () => {
-    axios.get.mockResolvedValueOnce(mockResponse)
+describe('News Component', () => {
+    beforeEach(() => {
+        axios.get.mockResolvedValue(mockResponse)
+    })
 
-    render(<News />)
+    test('renders headline and other articles', async () => {
+        render(<News />)
 
-    await waitFor(() => {
-        expect(screen.getByText(/Headline Article/i)).toBeInTheDocument()
-        expect(screen.getByText(/Second Article/i)).toBeInTheDocument()
+        await waitFor(() => {
+            expect(screen.getByText(/Headline News/i)).toBeInTheDocument()
+            expect(screen.getByText(/Secondary News/i)).toBeInTheDocument()
+        })
+    })
+
+    test('renders category links', () => {
+        render(<News />)
+        expect(screen.getByText('Science')).toBeInTheDocument()
+        expect(screen.getByText('Technology')).toBeInTheDocument()
+        expect(screen.getByText('Sports')).toBeInTheDocument()
     })
 })
