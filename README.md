@@ -13,7 +13,9 @@ npm run dev
 
 Vite will build program - open `http://localhost:5173/` in browser.
 
-### GNews is currently being used as API endpoint; will be switched to OpenAPI. 
+Once loaded on your local machine, create .env file in root and set VITE_API_KEY=YOUR_API_KEY where 'YOUR_API_KEY' is the actual key you get from the eventregistry newsAPI.
+
+### EventRegistry used for newsAPI endpoint. 
 
 ## snippet of its current layout
   
