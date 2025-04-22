@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import newsImage from '../assets/images/newsImage.jpg'
+import ArticleModal from './ArticleModal'
 import './News.css'
 import axios from 'axios'
+
+const categories = ['science', 'entertainment', 'sports', 'business', 'health']
 
 const News = () => {
 
     const [headline, setHeadline] = useState(null)
     const [news, setNews] = useState([])
+    const [categoryOpt, setCategoryOpt] = useState('general')
+    const [showModal, setShowModal] = useState(false)
+    const [selectedArticle, setSelectedArticle] = useState(null)
 
     // fetch data to render updated news data
     useEffect(() => {
         const fetchNews = async () => {
-            const url = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&apikey=ded415d5fa27479bb6e1fda4ba11af77`
+            const url = `https://gnews.io/api/v4/top-headlines?category=${categoryOpt}&lang=en&apikey=ded415d5fa27479bb6e1fda4ba11af77`
             // wait for response from server to proceed with get request
             const response = await axios.get(url)
 
@@ -30,7 +36,20 @@ const News = () => {
         }
 
         fetchNews()
-    }, [])
+    }, [categoryOpt])
+
+    // function which handles user interaction when selecting a news category 
+    const handleSelectedCategory = (e, category) => {
+        e.preventDefault()
+        setCategoryOpt(category) // sets the category state to the one selected by user
+    }
+
+    // function which handles user interaction when selecting an article
+    const handleSelectedArticle = (article) => {
+        setSelectedArticle(article)
+        setShowModal(true)
+    }
+
     return (
         <div className="news-app">
             <div className="news-header">
@@ -42,16 +61,18 @@ const News = () => {
                         Categories
                     </h1>
                     <div className='categories'>
-                        <a href="#" className='nav-link'>Science</a>
-                        <a href="#" className='nav-link'>Entertainment</a>
-                        <a href="#" className='nav-link'>Sports</a>
-                        <a href="#" className='nav-link'>Business</a>
-                        <a href="#" className='nav-link'>Health</a>
+                        {categories.map((category) => (
+                            <a href="#" className='nav-link'
+                                key={category} onClick={(e) => handleSelectedCategory(e, category)}>
+                                {category}
+                            </a>
+                        ))}
                     </div>
                 </nav>
                 <div className='news-section'>
                     {headline && (
-                        <div className='headline'>
+                        <div className='headline'
+                        onClick={() => handleSelectedArticle(headline)}>
                             <img src={headline.image} alt={headline.title} />
                             <h2 className='headline-title'>
                                 {headline.title}
@@ -62,13 +83,16 @@ const News = () => {
                     <div className='news-grid'>
                         {news.map((article, index) => (
                             <div className='grid-item'
-                                key={index}>
+                                key={index}
+                                onClick={() => handleSelectedArticle(article)}>
                                 <img src={article.image} alt={article.title} />
                                 <h3>{article.title}</h3>
                             </div>
                         ))}
                     </div>
                 </div>
+                <ArticleModal show={showModal} article={selectedArticle}
+                onClose={() => setShowModal(false)}/>
             </div>
             <footer>
                 <p className='foot-cpyrt'>

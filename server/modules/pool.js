@@ -23,3 +23,5 @@ else {
         database: databaseName,
     });
 }
+
+module.exports = pool;
