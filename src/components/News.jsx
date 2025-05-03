@@ -3,7 +3,8 @@ import ArticleModal from './ArticleModal'
 import './News.css'
 import axios from 'axios'
 
-// TODO: Move to get the categories from the api, hardcoded until then, also move to central service
+// TODO: Move to get the categories from the api, hardcoded until then, also move api integration to central service
+// NOTE: This structure matches the sctructure of the categories from the api
 const categories =
   [
     {
@@ -36,37 +37,39 @@ const categories =
 // function for the news homepage
 const News = () => {
 
-  const [headline, setHeadline] = useState(null)
-  const [news, setNews] = useState([])
-  const [category, setCategory] = useState(categories[0].id)
   const [showModal, setShowModal] = useState(false)
+  const [category, setCategory] = useState(categories[0].id)
+  const [headline, setHeadline] = useState(null)
+  const [articles, setArticles] = useState([])
   const [selectedArticle, setSelectedArticle] = useState(null)
   const apiKey = import.meta.env.VITE_API_KEY
 
   // TODO: Move to central api service (i don't remember what they are called for js)
   // fetch data to render updated news data
   useEffect(() => {
-    const fetchNews = async () => {
+    // NOTE: Later this will be a done on the server. The api will send the data when a batch of articles have completed generation
+    // There still needs to be an api integration in the client code incase articles are not present
+    const fetchArticles = async () => {
       try {
         const url = `https://staging.api.measured-gazette.com/api/v1/categories/${category}/articles?api_key=${apiKey}`
         // wait for response from server to proceed with get request
-        const response = await axios.get(url).data
+        const response = await axios.get(url)
 
-        const articles = response?.data || []
+        const fetchedArticles = response?.data?.data || []
 
-        articles.forEach((article) => {
+        fetchedArticles.forEach((article) => {
           if (!article.image) {
             article.image = 'image not available' // display if article has no image
           }
         })
         setHeadline(articles[0])
-        setNews(articles.slice(1, 7))
+        setArticles(articles.slice(1, 7))
       } catch (error) {
         console.error('Error fetching news:', error)
       }
     }
 
-    fetchNews()
+    fetchArticles()
   }, [category])
 
   // function which handles user interaction when selecting a news category 
@@ -112,7 +115,7 @@ const News = () => {
           )}
 
           <div className='news-grid'>
-            {news.map((article, index) => (
+            {articles.map((article, index) => (
               <div className='grid-item'
                 key={index}
                 onClick={() => handleSelectedArticle(article)}>
