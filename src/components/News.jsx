@@ -3,108 +3,139 @@ import ArticleModal from './ArticleModal'
 import './News.css'
 import axios from 'axios'
 
-const categories = ['Science', 'Technology', 'Sports', 'Business', 'Health']
+// TODO: Move to get the categories from the api, hardcoded until then, also move api integration to central service
+// NOTE: This structure matches the sctructure of the categories from the api
+const categories =
+  [
+    {
+      id: 1,
+      slug: "politics",
+      name: "Politics",
+    },
+    {
+      id: 2,
+      slug: "world",
+      name: "World",
+    },
+    {
+      id: 3,
+      slug: "technology",
+      name: "Technology",
+    },
+    {
+      id: 4,
+      slug: "finance",
+      name: "Finance",
+    },
+    {
+      id: 5,
+      slug: "sports",
+      name: "Sports",
+    }
+  ]
 
 // function for the news homepage
 const News = () => {
 
-    const [headline, setHeadline] = useState(null)
-    const [news, setNews] = useState([])
-    const [categoryOpt, setCategoryOpt] = useState('Science')
-    const [showModal, setShowModal] = useState(false)
-    const [selectedArticle, setSelectedArticle] = useState(null)
-    const apiKey = import.meta.env.VITE_API_KEY
+  const [showModal, setShowModal] = useState(false)
+  const [category, setCategory] = useState(categories[0].id)
+  const [headline, setHeadline] = useState(null)
+  const [articles, setArticles] = useState([])
+  const [selectedArticle, setSelectedArticle] = useState(null)
+  const apiKey = import.meta.env.VITE_API_KEY
 
-    // fetch data to render updated news data
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                const url = `https://eventregistry.org/api/v1/article/getArticles?apiKey=${apiKey}&categoryUri=news/${categoryOpt}&lang=eng`
-                // wait for response from server to proceed with get request
-                const response = await axios.get(url)
+  // TODO: Move to central api service (i don't remember what they are called for js)
+  // fetch data to render updated news data
+  useEffect(() => {
+    // NOTE: Later this will be a done on the server. The api will send the data when a batch of articles have completed generation
+    // There still needs to be an api integration in the client code incase articles are not present in cache
+    const fetchArticles = async () => {
+      try {
+        const url = `https://staging.api.measured-gazette.com/api/v1/categories/${category}/articles?api_key=${apiKey}`
+        // wait for response from server to proceed with get request
+        const response = await axios.get(url)
 
-                const fetchedNews = response.data.articles?.results || []
+        const fetchedArticles = response?.data?.data || []
 
-                fetchedNews.forEach((article) => {
-                    if (!article.image) {
-                        article.image = 'image not available' // display if article has no image
-                    }
-                })
-                setHeadline(fetchedNews[0])
-                setNews(fetchedNews.slice(1, 7))
-                console.log(fetchedNews)
-            } catch (error) {
-                console.error('Error fetching news:', error)
-            }
-        }
-
-        fetchNews()
-    }, [categoryOpt])
-
-    // function which handles user interaction when selecting a news category 
-    const handleSelectedCategory = (e, category) => {
-        e.preventDefault()
-        setCategoryOpt(category) // sets the category state to the one selected by user
+        fetchedArticles.forEach((article) => {
+          if (!article.image) {
+            article.image = 'image not available' // display if article has no image
+          }
+        })
+        setHeadline(fetchedArticles[0])
+        setArticles(fetchedArticles.slice(1, 7))
+      } catch (error) {
+        console.error('Error fetching news:', error)
+      }
     }
 
-    // function which handles user interaction when selecting an article
-    const handleSelectedArticle = (article) => {
-        setSelectedArticle(article)
-        setShowModal(true)
-    }
+    fetchArticles()
+  }, [category])
 
-    return (
-        <div className="news-app">
-            <div className="news-header">
-                <h1 className='logo'>Capstone News App</h1>
-            </div>
-            <div className='news-content'>
-                <nav className='nav-bar'>
-                    <h1 className='nav-heading'>
-                        Categories
-                    </h1>
-                    <div className='categories'>
-                        {categories.map((category) => (
-                            <a href="#" className='nav-link'
-                                key={category} onClick={(e) => handleSelectedCategory(e, category)}>
-                                {category}
-                            </a>
-                        ))}
-                    </div>
-                </nav>
-                <div className='news-section'>
-                    {headline && (
-                        <div className='headline'
-                            onClick={() => handleSelectedArticle(headline)}>
-                            <img src={headline.image} alt={headline.title} />
-                            <h2 className='headline-title'>
-                                {headline.title}
-                            </h2>
-                        </div>
-                    )}
+  // function which handles user interaction when selecting a news category 
+  const handleSelectedCategory = (e, category) => {
+    e.preventDefault()
+    setCategory(category.id) // sets the category state to the one selected by user
+  }
 
-                    <div className='news-grid'>
-                        {news.map((article, index) => (
-                            <div className='grid-item'
-                                key={index}
-                                onClick={() => handleSelectedArticle(article)}>
-                                <img src={article.image} alt={article.title} />
-                                <h3>{article.title}</h3>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <ArticleModal show={showModal} article={selectedArticle}
-                    onClose={() => setShowModal(false)} />
+  // function which handles user interaction when selecting an article
+  const handleSelectedArticle = (article) => {
+    setSelectedArticle(article)
+    setShowModal(true)
+  }
+
+  return (
+    <div className="news-app">
+      <div className="news-header">
+        <h1 className='logo'>Capstone News App</h1>
+      </div>
+      <div className='news-content'>
+        <nav className='nav-bar'>
+          <h1 className='nav-heading'>
+            Categories
+          </h1>
+          <div className='categories'>
+            {categories?.map((category) => (
+              <a href="#" className='nav-link'
+                key={category.slug} onClick={(e) => handleSelectedCategory(e, category)}>
+                {category.name}
+              </a>
+            ))}
+          </div>
+        </nav>
+        <div className='news-section'>
+          {headline && (
+            <div className='headline'
+              onClick={() => handleSelectedArticle(headline)}>
+              <img src={headline.image} alt={headline.title} />
+              <h2 className='headline-title'>
+                {headline.title}
+              </h2>
             </div>
-            <footer>
-                <p className='foot-cpyrt'>
-                    <span>AI News Aggregator</span>
-                </p>
-                <p>&copy; All Rights Reserved. By CMSC495 Group 5.</p>
-            </footer>
+          )}
+
+          <div className='news-grid'>
+            {articles.map((article, index) => (
+              <div className='grid-item'
+                key={index}
+                onClick={() => handleSelectedArticle(article)}>
+                <img src={article.image} alt={article.title} />
+                <h3>{article.title}</h3>
+              </div>
+            ))}
+          </div>
         </div>
-    )
+        <ArticleModal show={showModal} article={selectedArticle}
+          onClose={() => setShowModal(false)} />
+      </div>
+      <footer>
+        <p className='foot-cpyrt'>
+          <span>AI News Aggregator</span>
+        </p>
+        <p>&copy; All Rights Reserved. By CMSC495 Group 5.</p>
+      </footer>
+    </div>
+  )
 }
 
 export default News
