@@ -48,7 +48,7 @@ const News = () => {
   // fetch data to render updated news data
   useEffect(() => {
     // NOTE: Later this will be a done on the server. The api will send the data when a batch of articles have completed generation
-    // There still needs to be an api integration in the client code incase articles are not present
+    // There still needs to be an api integration in the client code incase articles are not present in cache
     const fetchArticles = async () => {
       try {
         const url = `https://staging.api.measured-gazette.com/api/v1/categories/${category}/articles?api_key=${apiKey}`
@@ -62,8 +62,8 @@ const News = () => {
             article.image = 'image not available' // display if article has no image
           }
         })
-        setHeadline(articles[0])
-        setArticles(articles.slice(1, 7))
+        setHeadline(fetchedArticles[0])
+        setArticles(fetchedArticles.slice(1, 7))
       } catch (error) {
         console.error('Error fetching news:', error)
       }
