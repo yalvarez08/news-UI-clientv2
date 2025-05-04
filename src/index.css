@@ -21,3 +21,32 @@ html {
   place-items: center;
 
 }
+
+.mobile-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  padding: 1rem;
+  background-color: rgb(245, 238, 254);
+}
+
+.construction-icon {
+  font-size: 4rem;
+  animation: bounce 1s infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
