@@ -1,11 +1,44 @@
-import React from 'react'
+import React , { useEffect, useRef, useState } from 'react'
 import './ArticleModal.css'
 
 // function for modal view when user selects article
 const ArticleModal = ({ show, article, onClose }) => {
-  if (!show) { // if show is false, render nothing
-    return null
+  const modalContentRef = useRef(null)
+  const [showScrollBtn, setShowScrollBtn] = useState(false)
+
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [show])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (modalContentRef.current) {
+        setShowScrollBtn(modalContentRef.current.scrollTop > 200)
+      }
+    }
+
+    const modal = modalContentRef.current
+    if (modal) modal.addEventListener('scroll', handleScroll)
+
+    return () => {
+      if (modal) modal.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  const scrollToTop = () => {
+    if (modalContentRef.current) {
+      modalContentRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
+  if (!show) return null
+
   return (  // if show is true, render full content of selected article
     <div className='modal'>
       <div className='modal-content'>
@@ -17,7 +50,11 @@ const ArticleModal = ({ show, article, onClose }) => {
           <>
             <img src={article.image} alt={article.title} className='modal-img' />
             <h2 className='modal-title'>{article.title}</h2>
-            <p className='modal-source'>Source: {article.sources}</p>
+            <a className='modal-source' 
+            href={article.sources} target='_blank'
+            rel='noopener noreferrer'>
+            Source: {article.sources}
+            </a>
             <p className='modal-date'>{new Date(article.created_at).toLocaleString(
               'en-US', {
               month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -27,11 +64,12 @@ const ArticleModal = ({ show, article, onClose }) => {
             <p className='modal-articleText'>
               {article.summary && `${article.summary}...`}
             </p>
-            <a href={article.sources} target='_blank'
-              rel='noopener noreferrer' className='continue-read'>
-              Read more
-            </a>
           </>
+        )}
+        {showScrollBtn && (
+          <button className='scroll-to-top-btn' onClick={scrollToTop}>
+            ↑ Top
+          </button>
         )}
       </div>
     </div>
