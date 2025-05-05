@@ -1,4 +1,4 @@
-import React , { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './ArticleModal.css'
 
 // function for modal view when user selects article
@@ -50,19 +50,19 @@ const ArticleModal = ({ show, article, onClose }) => {
           <>
             <img src={article.image} alt={article.title} className='modal-img' />
             <h2 className='modal-title'>{article.title}</h2>
-            <a className='modal-source' 
-            href={article.sources} target='_blank'
-            rel='noopener noreferrer'>
-            Source: {article.sources}
-            </a>
             <p className='modal-date'>{new Date(article.created_at).toLocaleString(
               'en-US', {
               month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
             }
             )}
             </p>
+            <a className='modal-source-link'
+              href={article.sources} target='_blank'
+              rel='noopener noreferrer'>
+              View Orginal Source
+            </a>
             <p className='modal-articleText'>
-              {article.summary && `${article.summary}...`}
+              {article.content && `${article.content}`}
             </p>
           </>
         )}

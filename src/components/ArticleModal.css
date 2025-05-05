@@ -49,12 +49,18 @@
     margin-top: 2rem;
 }
 
-.modal-source,
 .modal-date {
     font-family: "Comfortaa", sans-serif;
     font-size: 1.4rem;
     margin-top: 1rem;
     color: #bbb;
+}
+
+.modal-source-link {
+  font-family: "Comfortaa", sans-serif;
+  font-size: 1.4rem;
+  margin-top: 1.5rem;
+  color: #0000EE;
 }
 
 .modal-articleText {
