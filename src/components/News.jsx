@@ -87,7 +87,7 @@ const News = () => {
   return (
     <div className="news-app">
       <div className="news-header">
-        <h1 className='logo'>Capstone News App</h1>
+        <h1 className='logo'>Measured Gazette Capstone Project</h1>
       </div>
       <div className='news-content'>
         <nav className='nav-bar'>
